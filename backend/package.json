@@ -1,0 +1,24 @@
+{
+  "name": "todo-backend",
+  "version": "1.0.0",
+  "description": "Backend service for the todo application.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/meehirmanitrips/todo-app.git"
+  },
+  "author": "Meehir Mani Tripathy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/meehirmanitrips/todo-app/issues"
+  },
+  "homepage": "https://github.com/meehirmanitrips/todo-app#readme",
+  "dependencies": {
+    "express": "^4.21.1",
+    "mongoose": "^8.7.2",
+    "nodemon": "^3.1.7"
+  }
+}
