@@ -3,6 +3,7 @@ const { StatusCodes } = require("http-status-codes");
 const { createTodoSchema, updateOrDeleteTodoSchema } = require("./types");
 const { TodoModel } = require("./db");
 require("dotenv").config();
+const cors = require("cors");
 
 // global constants
 const app = express();
@@ -13,24 +14,22 @@ const internalServerMsg = "Something wrong with our servers.";
 
 // middlewares
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.get("/todos", async (req, res, next) => {
   try {
     const todos = await TodoModel.find({});
 
-    await Promise.all(
-      todos?.map(async (todo) => {
-        todo.todoId = todo._id;
-        delete todo._id;
-        delete todo.__v;
-      })
-    );
+    const cleanedTodos = todos.map((todo) => {
+      const { _id, __v, ...rest } = todo.toObject();
+      return { ...rest, todoId: _id };
+    });
 
     if (!res.headersSent)
       return res.status(StatusCodes.OK).json({
         error: false,
-        data: { todos },
+        data: { todos: cleanedTodos },
         message: successResponseMsg,
       });
   } catch (error) {
@@ -88,8 +87,6 @@ app.post("/todos", async (req, res, next) => {
     const doesTodoExist = await TodoModel.findOne({
       title: createPayload.data.title,
     });
-
-    console.log(doesTodoExist);
 
     if (doesTodoExist) {
       if (!res.headersSent)
@@ -206,9 +203,10 @@ app.delete("/todos", async (req, res, next) => {
 
 // global error handler
 app.use((err, req, res, next) => {
+  console.error(err);
   res
     .status(StatusCodes.INTERNAL_SERVER_ERROR)
-    .json({ error: true, data: { error: err, message: internalServerMsg } });
+    .json({ error: true, data: { error: err }, message: internalServerMsg });
 });
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

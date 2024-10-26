@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/meehirmanitrips/todo-app#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "http-status-codes": "^2.3.0",
